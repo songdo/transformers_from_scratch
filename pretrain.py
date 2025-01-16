@@ -10,7 +10,7 @@ def main():
 
     # load dataset
     raw_datasets = datasets.load_dataset(
-        "json", data_files="/data/WIKI_CN/wikipedia-zh-cn-20240820.json"
+        "json", data_files="./WIKI_CN/wikipedia-zh-cn-20241020.json"
     )
 
     raw_datasets = raw_datasets["train"].train_test_split(test_size=0.1, seed=2333)
@@ -40,6 +40,7 @@ def main():
             return_overflowing_tokens=True,
             return_length=True,
         )
+
         input_batch = []
         for length, input_ids in zip(outputs["length"], outputs["input_ids"]):
             if length == context_length:
@@ -52,6 +53,7 @@ def main():
     print("tokenize dataset info")
     print(tokenized_datasets)
     tokenizer.pad_token = tokenizer.eos_token
+    # 整理器
     data_collator = transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
     # prepare a model from scratch
